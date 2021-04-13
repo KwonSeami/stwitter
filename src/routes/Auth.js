@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { authService } from "../firebaseJS";
+import { authService, firebaseInstance } from "../firebaseJS";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -31,6 +31,22 @@ const Auth = () => {
     }
   };
   const toggleAccount = () => setNewAccount(prev => !prev);
+  const onSocailClick = async(e) => {
+    const {
+      target:{name}
+    } = e;
+
+    // 초기화 오류 : = ""; 까지 선언해주어야함(지정해주어야함)
+    let provider = "";
+
+    if(name === "google") {
+      provider = new firebaseInstance.auth.GoogleAuthProvider();
+    } else if(name === "github") {
+      provider = new firebaseInstance.auth.GithubAuthProvider();
+    }
+
+    const data = await authService.signInWithPopup(provider);
+  }
 
   return (
     <div>
@@ -59,8 +75,18 @@ const Auth = () => {
       </form>
       <span onClick={toggleAccount}>{newAccount ? "Sign in" : "Create Account"}</span>
       <div>
-        <button>Continue with Google</button>
-        <button>Continue with Github</button>
+        <button
+          name="google"
+          onClick={onSocailClick}
+        >
+          Continue with Google
+        </button>
+        <button
+          name="github"
+          onClick={onSocailClick}
+        >
+          Continue with Github
+        </button>
       </div>
     </div>
   )

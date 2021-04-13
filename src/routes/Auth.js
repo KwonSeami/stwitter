@@ -8,7 +8,9 @@ const Auth = () => {
   const [error, setError] = useState("");
 
   const onChange = (e) => {
-    const {target: {name, value}} = e;
+    const {
+      target: {name, value}
+    } = e;
     if(name === "email") {
       setEmail(value);
     } else if(name === "password") {
@@ -25,7 +27,6 @@ const Auth = () => {
       } else {
         data = await authService.signInWithEmailAndPassword(email, password);
       }
-      console.log(data);
     } catch(error) {
       setError(error.message);
     }

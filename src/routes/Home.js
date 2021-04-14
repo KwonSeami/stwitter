@@ -4,19 +4,26 @@ import React, { useEffect, useState } from "react";
 const Home = ({userObj}) => {
   const [sweet, setSweet] = useState("");
   const [sweets, setSweets] = useState([]);
-  const getSweets = async() => {
-    const dbSweets = await dbService.collection("sweets").get();
-    dbSweets.forEach((document) => {
-      const sweetObj = {
-        ...document.data(),
-        id: document.id,
-      }
-      setSweets((prev) => [sweetObj, ...prev]);
-    });
-  };
+  // const getSweets = async() => {
+  //   const dbSweets = await dbService.collection("sweets").get();
+  //   dbSweets.forEach((document) => {
+  //     const sweetObj = {
+  //       ...document.data(),
+  //       id: document.id,
+  //     }
+  //     setSweets((prev) => [sweetObj, ...prev]);
+  //   });
+  // };
 
   useEffect (() => {
-    getSweets();
+    // getSweets();
+    dbService.collection("sweets").onSnapshot((snapshot) => {
+      const sweetArray = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setSweets(sweetArray);
+    });
   }, []);
 
   const onSubmit = async(e) => {
@@ -53,7 +60,7 @@ const Home = ({userObj}) => {
       <div>
         {sweets.map((sweet) => (
           <div key={sweet.id}>
-            <h4>{sweet.sweet}</h4>
+            <h4>{sweet.text}</h4>
           </div>
         ))}
       </div>

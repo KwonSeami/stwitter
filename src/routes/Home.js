@@ -1,7 +1,7 @@
 import { dbService } from "firebaseJS";
 import React, { useEffect, useState } from "react";
 
-const Home = () => {
+const Home = ({userObj}) => {
   const [sweet, setSweet] = useState("");
   const [sweets, setSweets] = useState([]);
   const getSweets = async() => {
@@ -22,8 +22,9 @@ const Home = () => {
   const onSubmit = async(e) => {
     e.preventDefault();
     await dbService.collection("sweets").add({
-      sweet, //sweet:sweet
+      text: sweet, //sweet:sweet
       createdAt: Date.now(),
+      creatorId: userObj.uid,
     });
     setSweet("");
   };

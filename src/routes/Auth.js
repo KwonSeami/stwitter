@@ -74,19 +74,19 @@ const Auth = () => {
         />
         {error}
       </form>
-      <span onClick={toggleAccount}>{newAccount ? "Sign in" : "Create Account"}</span>
+      <span onClick={toggleAccount}>{newAccount ? "로그인" : "회원가입"}</span>
       <div>
         <button
           name="google"
           onClick={onSocailClick}
         >
-          Continue with Google
+          구글로 로그인하기
         </button>
         <button
           name="github"
           onClick={onSocailClick}
         >
-          Continue with Github
+          깃허브로 로그인하기
         </button>
       </div>
     </div>

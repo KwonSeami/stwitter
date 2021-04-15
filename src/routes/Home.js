@@ -1,3 +1,4 @@
+import Sweet from "components/Sweet";
 import { dbService } from "firebaseJS";
 import React, { useEffect, useState } from "react";
 
@@ -54,14 +55,16 @@ const Home = ({userObj}) => {
         />
         <input
           type="submit"
-          value="Sweet"
+          value="스윗"
         />
       </form>
       <div>
         {sweets.map((sweet) => (
-          <div key={sweet.id}>
-            <h4>{sweet.text}</h4>
-          </div>
+          <Sweet
+            key={sweet.id}
+            sweetObj={sweet}
+            isOwner={sweet.creatorId === userObj.uid}
+          />
         ))}
       </div>
     </div>

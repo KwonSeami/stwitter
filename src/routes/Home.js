@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 const Home = ({userObj}) => {
   const [sweet, setSweet] = useState("");
   const [sweets, setSweets] = useState([]);
+  const [attachment, setAttachment] = useState();
+
   // const getSweets = async() => {
   //   const dbSweets = await dbService.collection("sweets").get();
   //   dbSweets.forEach((document) => {
@@ -42,6 +44,21 @@ const Home = ({userObj}) => {
     } = e;
     setSweet(value);
   };
+  const onFileChange = (e) => {
+    const {
+      target: {files},
+    } = e;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedE) => {
+      const {
+        currentTarget: {result},
+      } = finishedE;
+      setAttachment(result);
+    };
+    reader.readAsDataURL(theFile);
+  };
+  const onClearAttachmentClick = () => setAttachment(null);
 
   return (
     <div>
@@ -54,9 +71,24 @@ const Home = ({userObj}) => {
           onChange={onChange}
         />
         <input
+          type="file"
+          accept="image/*"
+          onChange={onFileChange}
+        />
+        <input
           type="submit"
           value="스윗"
         />
+        {attachment && (
+          <div>
+            <img src={attachment} alt= "" width="50px" heignt="50px" />
+            <button
+              onClick={onClearAttachmentClick}
+            >
+              지우기
+            </button>
+          </div>
+        )}
       </form>
       <div>
         {sweets.map((sweet) => (

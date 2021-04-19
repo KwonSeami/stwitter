@@ -1,14 +1,15 @@
-import { dbService } from "firebaseJS";
+import { dbService, storageService } from "firebaseJS";
 import React, { useState } from "react";
 
 const Sweet = ({sweetObj, isOwner}) => {
   const [edit, setEdit] = useState(false);
   const [newSweet, setNewSweet] = useState(sweetObj.text);
 
-  const onDeleteClick = () => {
+  const onDeleteClick = async() => {
     const ok = window.confirm("정말 삭제하시겠습니까?");
     if(ok) {
-      dbService.doc(`sweets/${sweetObj.id}`).delete();
+      await dbService.doc(`sweets/${sweetObj.id}`).delete();
+      await storageService.refFromURL(sweetObj.attachmentUrl).delete();
     }
   };
   const toggleEdit = () => setEdit(prev => !prev);
@@ -52,6 +53,9 @@ const Sweet = ({sweetObj, isOwner}) => {
       ) : (
         <>
           <h4>{sweetObj.text}</h4>
+          {sweetObj.attachmentUrl && (
+            <img src={sweetObj.attachmentUrl} alt="" width="50px" height="50px" />
+          )}
           {isOwner && (
             <>
               <button

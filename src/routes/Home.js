@@ -1,11 +1,14 @@
 import Sweet from "components/Sweet";
-import { dbService } from "firebaseJS";
-import React, { useEffect, useState } from "react";
+import { dbService, storageService } from "firebaseJS";
+import React, { useEffect, useState, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const Home = ({userObj}) => {
   const [sweet, setSweet] = useState("");
   const [sweets, setSweets] = useState([]);
   const [attachment, setAttachment] = useState();
+  
+  const submitRef = useRef();
 
   // const getSweets = async() => {
   //   const dbSweets = await dbService.collection("sweets").get();
@@ -31,12 +34,22 @@ const Home = ({userObj}) => {
 
   const onSubmit = async(e) => {
     e.preventDefault();
-    await dbService.collection("sweets").add({
-      text: sweet, //sweet:sweet
+    let attachmentUrl = "";
+    if(attachment !== "") {
+      const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+      const response = await attachmentRef.putString(attachment, "data_url");
+      attachmentUrl = await response.ref.getDownloadURL();
+    };
+    const sweetObj = {
+      text: sweet,
       createdAt: Date.now(),
       creatorId: userObj.uid,
-    });
+      attachmentUrl,
+    };
+    await dbService.collection("sweets").add(sweetObj);
     setSweet("");
+    setAttachment("");
+    submitRef.current.value = "";
   };
   const onChange = (e) => {
     const {
@@ -73,6 +86,7 @@ const Home = ({userObj}) => {
         <input
           type="file"
           accept="image/*"
+          ref={submitRef}
           onChange={onFileChange}
         />
         <input
@@ -85,7 +99,7 @@ const Home = ({userObj}) => {
             <button
               onClick={onClearAttachmentClick}
             >
-              지우기
+              첨부 취소
             </button>
           </div>
         )}

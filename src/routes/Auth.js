@@ -40,11 +40,25 @@ const Auth = () => {
     // 초기화 오류 : = ""; 까지 선언해주어야함(지정해주어야함)
     let provider = "";
 
-    if(name === "google") {
-      provider = new firebaseInstance.auth.GoogleAuthProvider();
-    } else if(name === "github") {
-      provider = new firebaseInstance.auth.GithubAuthProvider();
-    }
+    // switch,case로 수정하기
+    // switch (name) {
+    //   case 'google': ~~~
+    //   case 'github': ~~~
+    // }
+    // if(name === "google") {
+    //   provider = new firebaseInstance.auth.GoogleAuthProvider();
+    // } else if(name === "github") {
+    //   provider = new firebaseInstance.auth.GithubAuthProvider();
+    // }
+
+    switch (name) {
+      case 'google':
+        provider = new firebaseInstance.auth.GoogleAuthProvider();
+      break
+      case 'github':
+        provider = new firebaseInstance.auth.GithubAuthProvider();
+      break
+    };
 
     const data = await authService.signInWithPopup(provider);
   }
